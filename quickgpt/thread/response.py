@@ -5,7 +5,7 @@ class Response:
         self._ = response_obj
 
     def __str__(self):
-        return "<ChatGPT> %s" % self.message
+        return "<assistant> %s" % self.message
 
     @property
     def id(self):

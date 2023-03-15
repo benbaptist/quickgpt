@@ -3,6 +3,8 @@
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/quickgpt?style=for-the-badge)](https://pypi.org/project/quickgpt/)
 [![PyPI](https://img.shields.io/pypi/v/quickgpt?style=for-the-badge)](https://pypi.org/project/quickgpt/)
 
+![example of quickgpt command](https://raw.githubusercontent.com/benbaptist/quickgpt/main/screenshot.png)
+
 **quickGPT** is a lightweight and easy-to-use Python library that provides a simplified interface for working with the new API interface of OpenAI's ChatGPT. With quickGPT, you can easily generate natural language responses to prompts and questions using state-of-the-art language models trained by OpenAI.
 
 For the record, this README.md was (mostly) generated with ChatGPT. That's why it's a little braggy.
