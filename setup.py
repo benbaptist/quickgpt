@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='quickgpt',
-    version='0.0.2',
+    version='0.1',
     description='A barebones library to make interacting with OpenAI\'s ChatGPT API much simpler.',
     long_description=open("README.rst", "r").read(),
     author='Ben Baptist',
