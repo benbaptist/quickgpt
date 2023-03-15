@@ -1,7 +1,6 @@
 # quickGPT
 
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/quickgpt?style=for-the-badge)](https://pypi.org/project/quickgpt/)
-![PyPI - Status](https://img.shields.io/pypi/status/quickgpt?style=for-the-badge)
 [![PyPI](https://img.shields.io/pypi/v/quickgpt?style=for-the-badge)](https://pypi.org/project/quickgpt/)
 
 **quickGPT** is a lightweight and easy-to-use Python library that provides a simplified interface for working with the new API interface of OpenAI's ChatGPT. With quickGPT, you can easily generate natural language responses to prompts and questions using state-of-the-art language models trained by OpenAI.
