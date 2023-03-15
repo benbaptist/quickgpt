@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
     def save():
         with open("messages.json", "w") as f:
-            f.write(json.dumps(thread.messages))
+            f.write(json.dumps(thread.serialize()))
 
     if os.path.exists("messages.json"):
         # Recall messages from previous session
@@ -27,8 +27,8 @@ if __name__ == "__main__":
 
         with open("messages.json", "r") as f:
             try:
-                messages = json.loads(f.read())
-                thread.feed(messages)
+                thread_obj = json.loads(f.read())
+                thread.restore(thread_obj)
 
                 thread.feed(
                     System("You're waking up from a resumed session. Re-greet the user.")
@@ -41,6 +41,7 @@ if __name__ == "__main__":
                 )
     else:
         print("Starting a fresh thread.")
+
         # Start a fresh thread.
         thread.feed(
             System("Assist the user with their questions.")

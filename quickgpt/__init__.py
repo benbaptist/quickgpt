@@ -9,7 +9,19 @@ class QuickGPT:
 
         self.api_key = api_key
 
+        self.threads = []
+
     def new_thread(self):
+        """ Creates a brand new thread. """
         thread = Thread(self)
+
+        self.threads.append(thread)
+
+        return thread
+
+    def restore_thread(self, obj):
+        """ Restores an existing thread, using the dict returned by thread.serialize(). """
+        thread = self.new_thread()
+        thread.restore(obj)
 
         return thread

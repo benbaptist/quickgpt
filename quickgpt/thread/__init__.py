@@ -1,5 +1,7 @@
 import openai
 
+from uuid import uuid4
+
 from quickgpt.thread.messagetypes import *
 from quickgpt.thread.response import Response
 
@@ -10,6 +12,27 @@ class Thread:
         openai.api_key = quickgpt.api_key
 
         self.thread = []
+        self.id = str(uuid4())
+
+    def __len__(self):
+        return len(self.thread)
+
+    def serialize(self):
+        """ Returns a serializable, JSON-friendly dict with all of the thread's
+        data. Can be restored to a new Thread object later. """
+
+        return {
+            "__quickgpt-thread__": {
+                "id": self.id,
+                "thread": self.messages
+            }
+        }
+
+    def restore(self, obj):
+        thread_dict = obj["__quickgpt-thread__"]
+        self.id = thread_dict["id"]
+
+        self.feed(thread_dict["thread"])
 
     def feed(self, *messages):
 
