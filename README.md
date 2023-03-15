@@ -12,18 +12,18 @@ For the record, this README.md was (mostly) generated with ChatGPT. That's why i
 You can install **quickGPT** using pip:
 
 ```sh
-pip install quickGPT
+pip install quickgpt
 ```
 
 ## Usage
-To use quickGPT, you'll need an OpenAI API key, which you can obtain from the OpenAI website. Once you have your API key, you can create a quickGPT object and start generating responses:
+To use quickgpt, you'll need an OpenAI API key, which you can obtain from the OpenAI website. Once you have your API key, you can create a QuickGPT object and start generating responses:
 
 ```
-from chattylib import ChattyLib
-from chattylib.thread.messagetypes import *
+from quickgpt import QuickGPT
+from quickgpt.thread.messagetypes import *
 
 if __name__ == "__main__":
-    chat = ChattyLib()
+    chat = QuickGPT()
 
     thread = chat.new_thread()
 
