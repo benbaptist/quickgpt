@@ -16,37 +16,18 @@ pip install quickgpt
 ```
 
 ## Usage
-To use quickgpt, you'll need an OpenAI API key, which you can obtain from the OpenAI website. Once you have your API key, you can create a QuickGPT object and start generating responses:
-
+To use quickgpt, you'll need an OpenAI API key, which you can obtain from the OpenAI website.
+Once you have your API key, you can specify your API key using an environment variable:
 ```
-from quickgpt import QuickGPT
-from quickgpt.thread.messagetypes import *
-
-if __name__ == "__main__":
-    # You can specify the API key here, or you can use an environment variable:
-    # export OPENAI_API_KEY="YOUR_API_KEY_HERE"
-
-    chat = QuickGPT(api_key="YOUR_API_KEY_HERE")
-
-    thread = chat.new_thread()
-
-    thread.feed(
-        System("The world is your oyster.")
-    )
-
-    while True:
-        response = thread.run()
-        print("Bot: %s" % response.message)
-
-        prompt = input("You: ")
-
-        thread.feed(
-            Assistant(response.message),
-            User(prompt)
-        )
+export OPENAI_API_KEY="YOUR_API_KEY_HERE"
 ```
 
-Try out `catbot.py` in the examples folder for an interactive fuzzface experience.
+or by passing it to the `api_key` parameter of `QuickGPT`:
+```
+chat = QuickGPT(api_key="YOUR_API_KEY_HERE")
+```
+
+See the examples for more information on how it works. Or, you can use the `quickgpt` tool for an interactive ChatGPT session in your command line. Make sure `~/.local/bin/` is in your `$PATH`.
 
 ## Documentation
 There's no documentation yet. Stay tuned.
