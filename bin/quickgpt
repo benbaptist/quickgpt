@@ -18,8 +18,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # If --api-key is specified, use this instead of the environment variable
-    if args.api_key:
-        api_key = args.api_key
+    api_key = args.api_key
 
     # Create a chat instance
     chat = QuickGPT(api_key=api_key)
