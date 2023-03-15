@@ -23,7 +23,10 @@ from quickgpt import QuickGPT
 from quickgpt.thread.messagetypes import *
 
 if __name__ == "__main__":
-    chat = QuickGPT()
+    # You can specify the API key here, or you can use an environment variable:
+    # export OPENAI_API_KEY="YOUR_API_KEY_HERE"
+
+    chat = QuickGPT(api_key="YOUR_API_KEY_HERE")
 
     thread = chat.new_thread()
 
