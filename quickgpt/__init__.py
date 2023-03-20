@@ -1,5 +1,7 @@
 from quickgpt.thread import Thread
 
+__version__ = "0.4"
+
 import os
 
 class QuickGPT:

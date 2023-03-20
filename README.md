@@ -32,21 +32,27 @@ chat = QuickGPT(api_key="YOUR_API_KEY_HERE")
 See the examples for more information on how it works. Or, you can use the `quickgpt` tool for an interactive ChatGPT session in your command line. Make sure `~/.local/bin/` is in your `$PATH`.
 
 ```
-usage: quickgpt [-h] [-k API_KEY] [-t THREAD] [-p PROMPT] [-l] [-n]
+usage: quickgpt [-h] [-k API_KEY] [-t THREAD] [-p PROMPT] [-l] [-n] [-i] [-v]
 
-Quick access to ChatGPT using the CLI
+Interactive command line tool to access ChatGPT
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -k API_KEY, --api-key API_KEY
                         Specify an API key to use with OpenAI
   -t THREAD, --thread THREAD
-                        Recall a previous conversation, or start a new one with the provided identifer
+                        Recall a previous conversation, or start a new one
+                        with the provided identifer
   -p PROMPT, --prompt PROMPT
                         Specify the initial prompt
   -l, --list            Lists saved threads
   -n, --no-initial-prompt
-                        Disables the initial prompt, and uses the User's first input as the prompt
+                        Disables the initial prompt, and uses the User's first
+                        input as the prompt
+  -i, --stdin           Takes a single prompt from stdin, and returns the
+                        output via stdout
+  -v, --version         Returns the version of the QuickGPT library (and this
+                        command)
 ```
 
 ## Documentation

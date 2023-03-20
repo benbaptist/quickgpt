@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from quickgpt import QuickGPT
+from quickgpt import __version__
 from quickgpt.thread.messagetypes import *
 
 import argparse
@@ -18,7 +19,7 @@ if __name__ == "__main__":
     # Parse cmd arguments with argparse
     parser = argparse.ArgumentParser(
         prog = "quickgpt",
-        description = "Quick access to ChatGPT using the CLI")
+        description = "Interactive command line tool to access ChatGPT")
 
     parser.add_argument("-k", "--api-key",
         help="Specify an API key to use with OpenAI",
@@ -40,7 +41,19 @@ if __name__ == "__main__":
         action="store_true",
         dest="no_prompt")
 
+    parser.add_argument("-i", "--stdin",
+        help="Takes a single prompt from stdin, and returns the output via stdout",
+        action="store_true")
+
+    parser.add_argument("-v", "--version",
+        help="Returns the version of the QuickGPT library (and this command)",
+        action="store_true")
+
     args = parser.parse_args()
+
+    if args.version:
+        print("quickGPT %s" % __version__)
+        sys.exit(0)
 
     if args.list:
         thread_files = os.listdir(config_path)
@@ -88,6 +101,19 @@ if __name__ == "__main__":
             thread.feed(
                 System(args.prompt)
             )
+
+    if args.stdin:
+        prompt = sys.stdin.read(-1)
+
+        thread.feed(
+            User(prompt)
+        )
+
+        response = thread.run()
+
+        print(response.message)
+
+        sys.exit(0)
 
     while True:
         if len(thread) > 0:

@@ -15,11 +15,12 @@ class Thread:
         self.id = str(uuid4())
 
     def __len__(self):
+        """ Returns the length of the thread """
         return len(self.thread)
 
     def serialize(self):
-        """ Returns a serializable, JSON-friendly dict with all of the thread's
-        data. Can be restored to a new Thread object later. """
+        """ Returns a serializable, JSON-friendly dict with all of the
+        thread's data. Can be restored to a new Thread object later. """
 
         return {
             "__quickgpt-thread__": {
@@ -29,12 +30,24 @@ class Thread:
         }
 
     def restore(self, obj):
+        """ Restores a serialized Thread object,
+        provided by thread.serialize() """
+
         thread_dict = obj["__quickgpt-thread__"]
         self.id = thread_dict["id"]
 
         self.feed(thread_dict["thread"])
 
+    def clear(self, include_sticky=False):
+        """ Resets the thread, preserving only messages that were
+        marked as sticky - unless include_sticky is set to True."""
+
+        for message in self.thread:
+            if not message.sticky or include_sticky:
+                self.thread.remove(message)
+
     def feed(self, *messages):
+        """ Appends a new message to the thread feed. """
 
         try:
             # Check if the first argument is a list, and then make it the parent
@@ -68,6 +81,7 @@ class Thread:
 
     @property
     def messages(self):
+        """ Returns a JSON-safe list of all messages in this thread """
         return [ msg.obj for msg in self.thread ]
 
     def run(self, feed=True):

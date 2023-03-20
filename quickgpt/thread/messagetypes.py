@@ -1,6 +1,7 @@
 class Message:
-    def __init__(self, content):
+    def __init__(self, content, sticky=False):
         self.content = content
+        self.sticky = sticky
 
     @property
     def role(self):
