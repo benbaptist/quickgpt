@@ -1,5 +1,6 @@
 README.rst
 *.json
+transcripts/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
