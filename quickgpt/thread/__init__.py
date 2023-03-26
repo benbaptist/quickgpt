@@ -100,3 +100,14 @@ class Thread:
             self.feed(response)
 
         return response
+
+    def moderate(self, prompt):
+        """ Validate a prompt to ensure it's safe for OpenAI's policies """
+        
+        response = openai.Moderation.create(
+            input=prompt
+        )
+
+        output = response["results"][0]
+
+        return output

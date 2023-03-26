@@ -1,2 +1,3 @@
-- [ ] Implement easy access to the Moderation API
-- [ ] Limit length of threads to prevent maxing out tokens
+- [X] Implement easy access to the Moderation API
+- [ ] Limit length of threads to prevent maxing out input tokens
+- [ ] Quick one-off prompt generations without the need to create threads
