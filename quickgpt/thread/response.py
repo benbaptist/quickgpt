@@ -7,6 +7,10 @@ class Response:
     def __str__(self):
         return "<assistant> %s" % self.message
 
+    def __len__(self):
+        """ Returns the length of the text, in characters """
+        return len(self.message)
+
     @property
     def id(self):
         return self._["id"]

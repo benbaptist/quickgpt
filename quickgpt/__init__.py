@@ -1,6 +1,6 @@
 from quickgpt.thread import Thread
 
-__version__ = "0.4.1"
+__version__ = "0.5"
 
 import os
 
@@ -14,7 +14,8 @@ class QuickGPT:
         self.threads = []
 
     def new_thread(self):
-        """ Creates a brand new thread. """
+        """ Creates a brand new Thread. """
+
         thread = Thread(self)
 
         self.threads.append(thread)
@@ -22,8 +23,18 @@ class QuickGPT:
         return thread
 
     def restore_thread(self, obj):
-        """ Restores an existing thread, using the dict returned by thread.serialize(). """
+        """ Restores an existing Thread, using the dict format
+        returned by thread.serialize(). """
+
         thread = self.new_thread()
         thread.restore(obj)
 
         return thread
+
+    def run(self, *messages):
+        """ Quickly generate a one-off response without
+        managing a full-blown Thread. """
+
+        thread = self.new_thread()
+
+        return thread.run(*messages)

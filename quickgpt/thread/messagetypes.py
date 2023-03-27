@@ -17,6 +17,10 @@ class Message:
     def __str__(self):
         return "<%s> %s" % (self.role, self.content)
 
+    def __len__(self):
+        """ Returns the length of the content, in characters """
+        return len(self.content)
+
 class System(Message): pass
 class User(Message): pass
 class Assistant(Message): pass
