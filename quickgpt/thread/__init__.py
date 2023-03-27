@@ -6,8 +6,9 @@ from quickgpt.thread.messagetypes import *
 from quickgpt.thread.response import Response
 
 class Thread:
-    def __init__(self, quickgpt):
+    def __init__(self, quickgpt, model):
         self.quickgpt = quickgpt
+        self.model = model
 
         openai.api_key = quickgpt.api_key
 
@@ -117,7 +118,7 @@ class Thread:
         append_messages = [ msg.obj for msg in append_messages ]
 
         response_obj = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+            model=self.model,
             messages=messages + append_messages
         )
 
