@@ -15,3 +15,9 @@ pandoc README.md --from markdown --to rst -s -o README.rst
 
 # Upload that sucker to pypi
 twine upload dist/$latest_build
+
+# Generate docs
+cp README.rst source/
+
+cd source
+# todo: make doc buildy stuff go here

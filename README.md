@@ -7,7 +7,7 @@
 
 **quickGPT** is a lightweight and easy-to-use Python library that provides a simplified interface for working with the new API interface of OpenAI's ChatGPT. With quickGPT, you can easily generate natural language responses to prompts and questions using state-of-the-art language models trained by OpenAI.
 
-For the record, this README.md was (mostly) generated with ChatGPT. That's why it's a little braggy.
+For the record, this README was (mostly) generated with ChatGPT - hence the braggy tone.
 
 ## Installation
 

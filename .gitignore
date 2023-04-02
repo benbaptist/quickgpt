@@ -2,6 +2,8 @@ README.rst
 *.json
 transcripts/
 
+source/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
