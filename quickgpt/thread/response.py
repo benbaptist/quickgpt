@@ -87,7 +87,7 @@ class Response:
             if "content" in delta:
                 segment = delta["content"]
 
-                self.gathered["choices"][0]["message"]["content"] = segment
+                self.gathered["choices"][0]["message"]["content"] += segment
 
                 yield segment
             else:
