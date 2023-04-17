@@ -4,7 +4,7 @@ from quickgpt.thread.messagetypes import *
 import os
 import time
 
-""" Forces ChatGPT to talk to itself. """
+""" Forces ChatGPT to talk to itself. Simply exhilarating. """
 
 if __name__ == "__main__":
     chat = QuickGPT()

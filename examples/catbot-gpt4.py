@@ -1,7 +1,7 @@
 from quickgpt import QuickGPT
 from quickgpt.thread.messagetypes import *
 
-""" Demonstration using a different model """
+""" Sweet little example of a simple kitty chat bot, using GPT-4. """
 
 if __name__ == "__main__":
     chat = QuickGPT()

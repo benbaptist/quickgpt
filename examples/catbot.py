@@ -1,6 +1,8 @@
 from quickgpt import QuickGPT
 from quickgpt.thread.messagetypes import *
 
+""" Sweet little example of a simple kitty chat bot. """
+
 if __name__ == "__main__":
     chat = QuickGPT()
 

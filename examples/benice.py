@@ -2,7 +2,10 @@ from quickgpt import QuickGPT
 from quickgpt.thread.messagetypes import *
 
 """ Example using OpenAI's Moderation API to verify that the
-prompt does not violate their ToS. """
+prompt does not violate their ToS.
+
+Try giving it a nasty, raunchy, rude little prompt. Learn what
+rejection feels like. You jerk. """
 
 if __name__ == "__main__":
     chat = QuickGPT()

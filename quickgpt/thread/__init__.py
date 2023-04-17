@@ -89,9 +89,6 @@ class Thread:
             assert type(msg) in (System, Assistant, User, Response, dict), \
                 "Must be of type System, Assistant, User, Response, or dict"
 
-            if type(msg) == Response:
-                msg = Assistant(msg.message)
-
             # Convert a boring old dict message to a pretty object message
             if type(msg) == dict:
                 role = msg["role"]
@@ -114,7 +111,8 @@ class Thread:
     def insert(self, index, *messages):
         """ Inserts messages at a given index in the Thread
 
-        Unfinished method?"""
+        This method is currently not implemented.
+        """
 
         self.feed(
             insert=True,
@@ -131,7 +129,7 @@ class Thread:
 
         return [ msg.obj for msg in self.thread ]
 
-    def run(self, *append_messages, feed=True):
+    def run(self, *append_messages, feed=True, stream=False):
         """ Executes the current Thread and get a response. If ``feed`` is
         True, it will automatically save the response to the Thread.
 
@@ -149,7 +147,8 @@ class Thread:
             try:
                 response_obj = openai.ChatCompletion.create(
                     model=self.model,
-                    messages=messages + append_messages
+                    messages=messages + append_messages,
+                    stream=stream
                 )
 
                 break
@@ -172,8 +171,7 @@ class Thread:
 
                 raise e
 
-
-        response = Response(response_obj)
+        response = Response(response_obj, stream=stream)
 
         if feed:
             self.feed(response)
@@ -194,6 +192,6 @@ class Thread:
             input=prompt
         )
 
-        output = response["results"][0]
+        output = response["results"][0]["flagged"]
 
         return output

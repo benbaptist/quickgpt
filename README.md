@@ -9,6 +9,8 @@
 
 For the record, this README was (mostly) generated with ChatGPT - hence the braggy tone.
 
+Like fine wine and cheddar, this library pairs nicely with the [ElevenLabs](https://github.com/benbaptist/elevenlabs) text-to-speech API library.
+
 ## Installation
 
 You can install **quickGPT** using pip:
