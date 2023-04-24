@@ -1,6 +1,7 @@
 import openai
 import time
 import json
+import tiktoken
 
 from uuid import uuid4
 
@@ -16,6 +17,8 @@ class Thread:
 
         self.thread = []
         self.id = str(uuid4())
+
+        self.tokenizer = None
 
     def __len__(self):
         """ Returns the length of the Thread, by message count
@@ -34,6 +37,28 @@ class Thread:
 
     def __setitem__(self, index, value):
         self.thread[index] = value
+
+    def get_tokens(self):
+        """ Returns the tokens of the current thread, using OpenAI's tiktoken
+
+        Currently hard-coded to use cl100k_base only for now.
+        """
+
+        if not self.tokenizer:
+            self.tokenizer = tiktoken.get_encoding("cl100k_base")
+
+        tokens = []
+
+        for message in self.thread:
+            _token = self.tokenizer.encode(message.message)
+            tokens += _token
+
+        return tokens
+
+    def get_tokens_length(self):
+        """ Returns the length of the current thread, in tokens """
+
+        return len(self.get_tokens())
 
     def serialize(self):
         """ Returns a serializable, JSON-friendly dict with all of the

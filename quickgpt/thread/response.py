@@ -1,4 +1,5 @@
 import datetime
+import tiktoken
 
 class Response:
     def __init__(self, response_obj, stream=False):
@@ -22,6 +23,12 @@ class Response:
     def __len__(self):
         """ Returns the length of the text, in characters """
         return len(self.message)
+
+    def get_tokens(self):
+        """ Returns the length of the content, in tokens """
+        tokenizer = tiktoken.get_encoding("cl100k_base")
+
+        return len(tokenizer.encode(self.message))
 
     @property
     def rsp(self):

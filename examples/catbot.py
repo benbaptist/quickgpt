@@ -1,7 +1,12 @@
 from quickgpt import QuickGPT
 from quickgpt.thread.messagetypes import *
 
-""" Sweet little example of a simple kitty chat bot. """
+""" Sweet little example of a simple kitty chat bot.
+
+Also, includes an example of getting token count. """
+
+# Set this to True to output verbose token information
+COUNT_TOKENS = False
 
 if __name__ == "__main__":
     chat = QuickGPT()
@@ -16,9 +21,12 @@ if __name__ == "__main__":
         response = thread.run()
         print("Catbot: %s" % response.message)
 
+        if COUNT_TOKENS:
+            print("Current Token Count: %s" % thread.get_tokens_length())
+
+            for msg in thread.thread:
+                print(f"* {msg.get_tokens()} for {msg}")
+
         prompt = input("You: ")
 
-        thread.feed(
-            Assistant(response.message),
-            User(prompt)
-        )
+        thread.feed(User(prompt))
