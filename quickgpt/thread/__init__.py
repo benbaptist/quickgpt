@@ -168,7 +168,7 @@ class Thread:
 
         return [ msg.obj for msg in self.thread ]
 
-    def add_function(self, method):
+    def add_function(self, method, description, properties, required=[]):
         """ Add a function that ChatGPT can call back.
 
         *name
@@ -178,9 +178,17 @@ class Thread:
             Response:
         """
 
-        self.functions[method.__name__] = method
+        self.functions[method.__name__] = {
+            "method": method,
+            "description": description,
+            "properties": properties,
+            "required": required
+        }
 
-    def run(self, *append_messages, feed=True, stream=False, functions=None):
+    def remove_function(self, name):
+        del self.functions[name]
+
+    def run(self, *append_messages, feed=True, stream=False):
         """ Executes the current Thread and get a response. If ``feed`` is
         True, it will automatically save the response to the Thread.
 
@@ -192,6 +200,31 @@ class Thread:
         Returns:
             Response: The resulting Response object from OpenAI
         """
+
+        functions = None
+
+        if len(self.functions) > 0:
+            functions = []
+
+            for name in self.functions:
+                function = self.functions[name]
+
+                method = function["method"]
+                description = function["description"]
+                properties = function["properties"]
+                required = function["required"]
+
+                _function = {
+                        "name": name,
+                        "description": description,
+                        "parameters": {
+                            "type": "object",
+                            "properties": properties,
+                            "required": required
+                        }
+                    }
+
+                functions.append(_function)
 
         messages = self.messages
         append_messages = [ msg.obj for msg in append_messages ]
@@ -243,7 +276,7 @@ class Thread:
             name = function_call["name"]
             arguments = json.loads(function_call["arguments"])
 
-            content = self.functions[name](**arguments)
+            content = self.functions[name]["method"](**arguments)
 
             function = Function(name, content)
 
