@@ -1,6 +1,6 @@
 from quickgpt.thread import Thread
 
-__version__ = "0.6.2"
+__version__ = "0.7"
 
 import os
 
@@ -22,7 +22,7 @@ class QuickGPT:
 
         self.threads = []
 
-    def new_thread(self, model="gpt-3.5-turbo"):
+    def new_thread(self, model="gpt-3.5-turbo-0613"):
         """ Creates a brand new Thread.
 
         Args:

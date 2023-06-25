@@ -16,6 +16,7 @@ class Thread:
         openai.api_key = quickgpt.api_key
 
         self.thread = []
+        self.functions = {}
         self.id = str(uuid4())
 
         self.tokenizer = None
@@ -154,12 +155,26 @@ class Thread:
 
         return [ msg.obj for msg in self.thread ]
 
-    def run(self, *append_messages, feed=True, stream=False):
+    def add_function(self, method):
+        """ Add a function that ChatGPT can call back.
+
+        *name
+        *method
+
+        Returns:
+            Response:
+        """
+
+        self.functions[method.__name__] = method
+
+    def run(self, *append_messages, feed=True, stream=False, functions=None):
         """ Executes the current Thread and get a response. If ``feed`` is
         True, it will automatically save the response to the Thread.
 
         You can provide *append_messages that will only apply to this run(),
         and won't be permanently stored in the Thread.
+
+        *functions allows you to define functions.
 
         Returns:
             Response: The resulting Response object from OpenAI
@@ -170,11 +185,20 @@ class Thread:
 
         for i in range(self.quickgpt.retry_count):
             try:
-                response_obj = openai.ChatCompletion.create(
-                    model=self.model,
-                    messages=messages + append_messages,
-                    stream=stream
-                )
+                if functions:
+                    response_obj = openai.ChatCompletion.create(
+                        model=self.model,
+                        messages=messages + append_messages,
+                        stream=stream,
+                        functions=functions,
+                        function_call="auto"
+                    )
+                else:
+                    response_obj = openai.ChatCompletion.create(
+                        model=self.model,
+                        messages=messages + append_messages,
+                        stream=stream
+                    )
 
                 break
             except openai.error.RateLimitError as e:
@@ -183,6 +207,7 @@ class Thread:
                     raise e
 
                 print("OpenAI returned RateLimitError, trying again after 10 sec...")
+
                 time.sleep(10)
             except openai.error.InvalidRequestError as e:
                 print(
@@ -196,12 +221,20 @@ class Thread:
 
                 raise e
 
-        response = Response(response_obj, stream=stream)
+        message = response_obj["choices"][0]["message"]
 
-        if feed:
-            self.feed(response)
+        if "function_call" in message:
+            name = message["function_call"]["name"]
+            arguments = json.loads(message["function_call"]["arguments"])
 
-        return response
+            return self.functions[name](**arguments)
+        else:
+            response = Response(response_obj, stream=stream)
+
+            if feed:
+                self.feed(response)
+
+            return response
 
     def moderate(self, prompt):
         """ Validate a prompt to ensure it's safe for OpenAI's policies

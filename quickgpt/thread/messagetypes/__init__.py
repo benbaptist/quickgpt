@@ -1,6 +1,6 @@
 import tiktoken
 
-class Message:
+class Message(object):
     def __init__(self, content, sticky=False):
         self.content = content
         self.sticky = sticky
