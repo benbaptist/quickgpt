@@ -35,4 +35,36 @@ class Message(object):
 
 class System(Message): pass
 class User(Message): pass
-class Assistant(Message): pass
+class Assistant(Message):
+    def __init__(self, content, function_call=None, sticky=False):
+        self.content = content
+        self.function_call = function_call
+        self.sticky = sticky
+
+    @property
+    def obj(self):
+        if self.function_call:
+            return {
+                "role": self.role,
+                "function_call": self.function_call,
+                "content": self.content
+            }
+        else:
+            return {
+                "role": self.role,
+                "content": self.content
+            }
+
+class Function(Message):
+    def __init__(self, name, content, sticky=False):
+        self.name = name
+        self.content = content
+        self.sticky = sticky
+
+    @property
+    def obj(self):
+        return {
+            "role": self.role,
+            "name": self.name,
+            "content": self.content
+        }

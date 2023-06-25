@@ -1,7 +1,5 @@
 from quickgpt import QuickGPT
 from quickgpt.thread.messagetypes import *
-from quickgpt.thread.function import Function
-from quickgpt.thread.function.parameter import Parameter
 
 """ Testing functions. """
 
@@ -10,8 +8,8 @@ if __name__ == "__main__":
 
     thread = chat.new_thread(model="gpt-4-0613")
 
-    def get_current_weather(**kwargs):
-        print(kwargs)
+    def get_current_weather(zip_code=None):
+        return f"Weather for {zip_code}: It's 65 degrees and Sunny. Tomorrow, it'll rain."
 
     thread.add_function(get_current_weather)
 
@@ -19,25 +17,11 @@ if __name__ == "__main__":
         prompt = None
 
         while not prompt:
-            # prompt = input("<You> ")
-            prompt = "What's the weather in Benton Harbor area like?"
+            prompt = input("<You> ")
 
             thread.feed(
                 User(prompt)
             )
-
-        # response = thread.run(
-        #         functions={
-        #             "weather": Function(
-        #                 name="Weather",
-        #                 description="Get the weather forecast",
-        #                 properties={
-        #                     "zip": Parameter(type="string", description="The ZIP code to retrieve the weather from")
-        #                 },
-        #                 required=["zip"]
-        #             )
-        #         }
-        # )
 
         response = thread.run(
                 functions=[{
@@ -46,22 +30,18 @@ if __name__ == "__main__":
                         "parameters": {
                             "type": "object",
                             "properties": {
-                                "location": {
+                                "zip_code": {
                                     "type": "string",
-                                    "description": "The city and state, e.g. San Francisco, CA",
-                                },
-                                "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
+                                    "description": "The zip code, e.g. 60052",
+                                }
                             },
-                            "required": ["location"]
+                            "required": ["zip_code"]
                         }
                     }
                 ]
         )
 
+        if type(response) == Function:
+            response = thread.run()
+
         print(response)
-
-        # thread.feed(
-        #     Assistant(response.message)
-        # )
-
-        break

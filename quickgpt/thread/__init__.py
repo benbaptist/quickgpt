@@ -17,6 +17,12 @@ class Thread:
 
         self.thread = []
         self.functions = {}
+        self.usage = {
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "total_tokens": 0
+        }
+
         self.id = str(uuid4())
 
         self.tokenizer = None
@@ -73,7 +79,8 @@ class Thread:
         return {
             "__quickgpt-thread__": {
                 "id": self.id,
-                "thread": self.messages
+                "thread": self.messages,
+                "usage": self.usage
             }
         }
 
@@ -90,6 +97,9 @@ class Thread:
 
         thread_dict = obj["__quickgpt-thread__"]
         self.id = thread_dict["id"]
+
+        if "usage" in obj:
+            self.usage = obj["usage"]
 
         self.feed(thread_dict["thread"])
 
@@ -112,8 +122,8 @@ class Thread:
             pass
 
         for msg in messages:
-            assert type(msg) in (System, Assistant, User, Response, dict), \
-                "Must be of type System, Assistant, User, Response, or dict"
+            assert type(msg) in (System, Assistant, User, Function, Response, dict), \
+                "Must be of type System, Assistant, User, Function, Response, or dict"
 
             # Convert a boring old dict message to a pretty object message
             if type(msg) == dict:
@@ -126,6 +136,9 @@ class Thread:
                     msg = Assistant(content)
                 elif role == "user":
                     msg = User(content)
+                elif role == "function":
+                    name = msg["name"]
+                    msg = Function(name, content)
                 else:
                     raise TypeError("Unknown role '%s'" % role)
 
@@ -221,13 +234,24 @@ class Thread:
 
                 raise e
 
+        self.usage = response_obj["usage"]
+
         message = response_obj["choices"][0]["message"]
 
         if "function_call" in message:
-            name = message["function_call"]["name"]
-            arguments = json.loads(message["function_call"]["arguments"])
+            function_call = message["function_call"]
+            name = function_call["name"]
+            arguments = json.loads(function_call["arguments"])
 
-            return self.functions[name](**arguments)
+            content = self.functions[name](**arguments)
+
+            function = Function(name, content)
+
+            if feed:
+                self.feed(Assistant(None, function_call=function_call))
+                self.feed(function)
+
+            return function
         else:
             response = Response(response_obj, stream=stream)
 
