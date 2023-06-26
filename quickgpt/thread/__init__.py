@@ -166,6 +166,12 @@ class Thread:
             list: JSON-safe list of all messages
         """
 
+        for msg in self.thread:
+            if msg.obj["role"] == "assistant":
+                if not msg.obj["content"] and "function_call" not in msg.obj:
+                    self.thread.remove(msg)
+
+
         return [ msg.obj for msg in self.thread ]
 
     def add_function(self, method, description, properties, required=[]):

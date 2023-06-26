@@ -52,6 +52,13 @@ class Response:
 
     @property
     def obj(self):
+        if self.has_function_call:
+            return {
+                "role": self.choices[0]["message"]["role"],
+                "content": self.choices[0]["message"]["content"],
+                "function_call": self.function_call
+            }
+            
         return {
             "role": self.choices[0]["message"]["role"],
             "content": self.choices[0]["message"]["content"]
