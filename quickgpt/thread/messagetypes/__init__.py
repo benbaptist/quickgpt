@@ -66,5 +66,5 @@ class Function(Message):
         return {
             "role": self.role,
             "name": self.name,
-            "content": self.content
+            "content": str(self.content)
         }

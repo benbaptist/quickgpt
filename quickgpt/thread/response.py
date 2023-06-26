@@ -6,16 +6,29 @@ class Response:
         self._ = response_obj
         self.stream = stream
         self.complete = False
+        self.has_function_call = None
         self._message = ""
 
         self.gathered = {
             "choices": [{
                 "message": {
                     "role": None,
-                    "content": ""
+                    "content": "",
+                    "function_call": None
                 }
             }]
         }
+
+        self.buffered = None
+
+        if not stream:
+            self.complete = True
+
+            try:
+                self.function_call
+                self.has_function_call = True
+            except:
+                pass
 
     def __str__(self):
         return "<assistant> %s" % self.message
@@ -65,22 +78,35 @@ class Response:
         return self.rsp["choices"]
 
     @property
+    def function_call(self):
+        return self.choices[0]["message"]["function_call"]
+
+    @property
     def message(self):
         """ Returns the message from the first generated choice """
 
         if self.complete:
-            return self.gathered["choices"][0]["message"]["content"]
+            return self.choices[0]["message"]["content"]
 
         if self.stream:
             return self._message_stream
 
         # The first generation or so typically has newlines, so
         # I'm .strip()'ing them out.
-        return self.choices[0]["message"]["content"].strip()
+
+        if self.choices[0]["message"]["content"]:
+            return self.choices[0]["message"]["content"].strip()
 
     @property
     def _message_stream(self):
         """ Special handling for streams only """
+
+        if self.buffered:
+            b = self.buffered
+
+            self.buffered = None
+
+            yield b
 
         for resp in self._:
             self.gathered["id"] = resp["id"]
@@ -91,12 +117,35 @@ class Response:
             if "role" in delta:
                 self.gathered["choices"][0]["message"]["role"] = delta["role"]
 
-            if "content" in delta:
+            if "function_call" in delta:
+                self.has_function_call = True
+
+                if not self.gathered["choices"][0]["message"]["function_call"]:
+                    self.gathered["choices"][0]["message"]["function_call"] = {
+                        "name": "",
+                        "arguments": ""
+                    }
+
+                if "name" in delta["function_call"]:
+
+                    self.gathered["choices"][0]["message"]["function_call"]["name"] += \
+                        delta["function_call"]["name"]
+
+                if "arguments" in delta["function_call"]:
+
+                    self.gathered["choices"][0]["message"]["function_call"]["arguments"] += \
+                        delta["function_call"]["arguments"]
+
+                yield None
+
+            elif "content" in delta:
                 segment = delta["content"]
 
-                self.gathered["choices"][0]["message"]["content"] += segment
+                if segment:
 
-                yield segment
+                    self.gathered["choices"][0]["message"]["content"] += segment
+
+                    yield segment
             else:
                 yield ""
 

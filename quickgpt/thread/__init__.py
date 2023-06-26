@@ -267,31 +267,37 @@ class Thread:
 
                 raise e
 
-        self.usage = response_obj["usage"]
+        response = Response(response_obj, stream=stream)
 
-        message = response_obj["choices"][0]["message"]
+        # Get first segment, and test if function call. otherwise, pass on to client
+        if response.message:
+            for resp in response.message:
 
-        if "function_call" in message:
-            function_call = message["function_call"]
-            name = function_call["name"]
-            arguments = json.loads(function_call["arguments"])
+                if not response.has_function_call:
+                    response.buffered = resp
+                    break
+
+        # If there's a function, override stream
+        if response.has_function_call:
+            name = response.function_call["name"]
+            arguments = json.loads(response.function_call["arguments"])
 
             content = self.functions[name]["method"](**arguments)
 
             function = Function(name, content)
 
             if feed:
-                self.feed(Assistant(None, function_call=function_call))
+                self.feed(Assistant(None, function_call=response.function_call))
                 self.feed(function)
 
+            print("Returning function")
+
             return function
-        else:
-            response = Response(response_obj, stream=stream)
 
-            if feed:
-                self.feed(response)
+        if feed:
+            self.feed(response)
 
-            return response
+        return response
 
     def moderate(self, prompt):
         """ Validate a prompt to ensure it's safe for OpenAI's policies

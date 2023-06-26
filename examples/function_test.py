@@ -31,7 +31,8 @@ if __name__ == "__main__":
 
         while not prompt:
             # e.g. ask "What's the weather like in Chicago?"
-            prompt = input("<You> ")
+            # prompt = input("<You> ")
+            prompt = "What's the weather like in chicago?"
 
             thread.feed(
                 User(prompt)
@@ -44,3 +45,5 @@ if __name__ == "__main__":
             response = thread.run()
 
         print(response)
+
+        break
