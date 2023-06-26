@@ -41,8 +41,8 @@ if __name__ == "__main__":
     while True:
 
         if fresh_iter:
-            # prompt = input("You: ")
-            prompt = "What is 5+5?"
+            prompt = input("You: ")
+            # prompt = "What is 5+5?"
 
             thread.feed(
                 User(prompt)
