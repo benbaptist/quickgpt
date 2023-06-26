@@ -45,5 +45,3 @@ if __name__ == "__main__":
             response = thread.run()
 
         print(response)
-
-        break

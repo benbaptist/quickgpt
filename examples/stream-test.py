@@ -70,5 +70,3 @@ if __name__ == "__main__":
                 fresh_iter = True
         else:
             print("Bot: %s" % response.message)
-
-        break
