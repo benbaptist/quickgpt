@@ -58,7 +58,7 @@ class Response:
                 "content": self.choices[0]["message"]["content"],
                 "function_call": self.function_call
             }
-            
+
         return {
             "role": self.choices[0]["message"]["role"],
             "content": self.choices[0]["message"]["content"]
@@ -102,7 +102,7 @@ class Response:
         # I'm .strip()'ing them out.
 
         if self.choices[0]["message"]["content"]:
-            return self.choices[0]["message"]["content"].strip()
+            return self.choices[0]["message"]["content"]
 
     @property
     def _message_stream(self):
