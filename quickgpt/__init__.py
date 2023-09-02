@@ -54,9 +54,9 @@ class QuickGPT:
 
         return thread
 
-    def run(self, *messages):
+    def run(self, *messages, stream=False):
         """ Quickly generate a one-off response without
-        managing a full-blown Thread.
+        managing a thread.
 
         Returns:
             Response: The resulting Response object from OpenAI
@@ -64,4 +64,4 @@ class QuickGPT:
 
         thread = self.new_thread()
 
-        return thread.run(*messages)
+        return thread.run(*messages, stream=stream)
