@@ -64,4 +64,4 @@ class QuickGPT:
 
         thread = self.new_thread()
 
-        return thread.run(*messages, stream=stream)
+        return thread.run(*messages, stream=stream, functions=functions)
