@@ -54,7 +54,7 @@ class QuickGPT:
 
         return thread
 
-    def run(self, *messages, stream=False):
+    def run(self, *messages, stream=False, functions=[]):
         """ Quickly generate a one-off response without
         managing a thread.
 

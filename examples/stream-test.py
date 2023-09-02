@@ -20,21 +20,23 @@ if __name__ == "__main__":
 
         return a + b
 
-    thread.add_function(
-        method=addition,
-        description="Add two numbers together and get a result.",
-        properties={
-            "a": {
-                "type": "integer",
-                "description": "First number to add."
+    functions = [
+        {
+            "method": addition,
+            "description": "Add two numbers together and get a result.",
+            "properties": {
+                "a": {
+                    "type": "integer",
+                    "description": "First number to add."
+                },
+                "b": {
+                    "type": "integer",
+                    "description": "Second number to add."
+                }
             },
-            "b": {
-                "type": "integer",
-                "description": "Second number to add."
-            }
-        },
-        required=["a", "b"]
-    )
+            "required": ["a", "b"]
+        }
+    ]
 
     fresh_iter = True
 
@@ -42,13 +44,12 @@ if __name__ == "__main__":
 
         if fresh_iter:
             prompt = input("You: ")
-            # prompt = "What is 5+5?"
 
             thread.feed(
                 User(prompt)
             )
 
-        response = thread.run(stream=DO_STREAM)
+        response = thread.run(stream=DO_STREAM, functions=functions)
 
         if DO_STREAM:
             sys.stdout.write("Bot: ")

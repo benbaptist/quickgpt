@@ -16,7 +16,6 @@ class Thread:
         openai.api_key = quickgpt.api_key
 
         self.thread = []
-        self.functions = {}
         self.usage = {
             "prompt_tokens": 0,
             "completion_tokens": 0,
@@ -174,27 +173,7 @@ class Thread:
 
         return [ msg.obj for msg in self.thread ]
 
-    def add_function(self, method, description, properties, required=[]):
-        """ Add a function that ChatGPT can call back.
-
-        *name
-        *method
-
-        Returns:
-            Response:
-        """
-
-        self.functions[method.__name__] = {
-            "method": method,
-            "description": description,
-            "properties": properties,
-            "required": required
-        }
-
-    def remove_function(self, name):
-        del self.functions[name]
-
-    def run(self, *append_messages, feed=True, stream=False):
+    def run(self, *append_messages, feed=True, stream=False, functions=[]):
         """ Executes the current Thread and get a response. If ``feed`` is
         True, it will automatically save the response to the Thread.
 
@@ -207,42 +186,40 @@ class Thread:
             Response: The resulting Response object from OpenAI
         """
 
-        functions = None
+        _functions = None
 
-        if len(self.functions) > 0:
-            functions = []
+        if len(functions) > 0:
+            _functions = []
 
-            for name in self.functions:
-                function = self.functions[name]
-
+            for function in functions:
                 method = function["method"]
                 description = function["description"]
                 properties = function["properties"]
                 required = function["required"]
 
                 _function = {
-                        "name": name,
-                        "description": description,
-                        "parameters": {
-                            "type": "object",
-                            "properties": properties,
-                            "required": required
-                        }
+                    "name": method.__name__,
+                    "description": description,
+                    "parameters": {
+                        "type": "object",
+                        "properties": properties,
+                        "required": required
                     }
+                }
 
-                functions.append(_function)
+                _functions.append(_function)
 
         messages = self.messages
         append_messages = [ msg.obj for msg in append_messages ]
 
         for i in range(self.quickgpt.retry_count):
             try:
-                if functions:
+                if _functions:
                     response_obj = openai.ChatCompletion.create(
                         model=self.model,
                         messages=messages + append_messages,
                         stream=stream,
-                        functions=functions,
+                        functions=_functions,
                         function_call="auto"
                     )
                 else:
@@ -288,7 +265,9 @@ class Thread:
             name = response.function_call["name"]
             arguments = json.loads(response.function_call["arguments"])
 
-            content = self.functions[name]["method"](**arguments)
+            for f in functions:
+                if f["method"].__name__ == name:
+                    content = f["method"](**arguments)
 
             function = Function(name, content)
 

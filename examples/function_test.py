@@ -11,17 +11,17 @@ if __name__ == "__main__":
     def get_current_weather(zip_code=None):
         return f"Weather for {zip_code}: It's 65 degrees and Sunny. Tomorrow, it'll rain."
 
-    thread.add_function(
-        method=get_current_weather,
-        description="Get the current weather in a given location",
-        properties={
+    functions = [{
+        "method": get_current_weather,
+        "description": "Get the current weather in a given location",
+        "properties": {
             "zip_code": {
                 "type": "string",
                 "description": "The zip code for the weather, e.g. 60052"
             }
         },
-        required=["zip_code"]
-    )
+        "required": ["zip_code"]
+    }]
 
     print("Try asking the AI about the weather.")
     print("Note: It'll return a hard-coded, fake weather report.")
@@ -38,10 +38,10 @@ if __name__ == "__main__":
                 User(prompt)
             )
 
-        response = thread.run()
+        response = thread.run(functions=functions)
 
         if type(response) == Function:
             # Run again with the function's response
-            response = thread.run()
+            response = thread.run(functions=functions)
 
         print(response)
