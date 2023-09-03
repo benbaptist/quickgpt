@@ -43,7 +43,8 @@ if __name__ == "__main__":
     while True:
 
         if fresh_iter:
-            prompt = input("You: ")
+            # prompt = input("You: ")
+            prompt = "What is 75252+5828452, and also, what is 28582+25252?"
 
             thread.feed(
                 User(prompt)
@@ -52,13 +53,13 @@ if __name__ == "__main__":
         response = thread.run(stream=DO_STREAM, functions=functions)
 
         if DO_STREAM:
-            sys.stdout.write("Bot: ")
-
             if type(response) == Function:
-                print("[executed function]")
+                print(response)
                 fresh_iter = False
                 continue
             else:
+
+                sys.stdout.write("<bot> ")
 
                 for resp in response.message:
 
@@ -69,5 +70,7 @@ if __name__ == "__main__":
                 print("")
 
                 fresh_iter = True
+
+                break
         else:
             print("Bot: %s" % response.message)

@@ -1,6 +1,6 @@
 from quickgpt.thread import Thread
 
-__version__ = "0.7.3"
+__version__ = "0.7.4"
 
 import os
 
@@ -54,7 +54,7 @@ class QuickGPT:
 
         return thread
 
-    def run(self, *messages, stream=False, functions=[]):
+    def run(self, *messages, stream=False, functions=[], model=None):
         """ Quickly generate a one-off response without
         managing a thread.
 
@@ -64,4 +64,21 @@ class QuickGPT:
 
         thread = self.new_thread()
 
+        if model:
+            thread.model = model
+
         return thread.run(*messages, stream=stream, functions=functions)
+
+    def moderate(self, prompt):
+        """ Validate a prompt to ensure it's safe for OpenAI's policies
+
+        Args:
+            prompt (str): The user's query to validate
+
+        Returns:
+            bool: True if it's flagged as a violation, False if it's safe
+        """
+
+        thread = self.new_thread()
+
+        return thread.moderate(prompt)

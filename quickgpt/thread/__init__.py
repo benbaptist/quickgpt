@@ -275,8 +275,6 @@ class Thread:
                 self.feed(Assistant(None, function_call=response.function_call))
                 self.feed(function)
 
-            print("Returning function")
-
             return function
 
         if feed:
